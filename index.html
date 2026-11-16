@@ -177,10 +177,7 @@ function renderList(){
     (gender==="all" || m.gender===gender) &&
     (!q || m.name.includes(q))
   );
-  list = list.slice().sort((a,b)=>{
-    const na = parseInt(a.no.replace(/\D/g,"")), nb = parseInt(b.no.replace(/\D/g,""));
-    return nb-na;
-  });
+  // 表示順はデータの並び順（新規参加者は先頭に追加され、一覧の上に並ぶ）
   $("memberGrid").innerHTML = list.map(m=>{
     const gc = GROUPS[groupOf(m.code)].color;
     return `<div class="card" data-no="${m.no}">
