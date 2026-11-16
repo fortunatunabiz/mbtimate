@@ -135,6 +135,7 @@ const GROUPS = {
   sentinel:{name:"番人",color:"#4298b4",codes:["ISTJ","ISFJ","ESTJ","ESFJ"]},
   explorer:{name:"探検家",color:"#e4ae3a",codes:["ISTP","ISFP","ESTP","ESFP"]}
 };
+const genderHTML = g => `<span style="color:${g==="男性"?"var(--male)":"var(--female)"};font-weight:700">${g}</span>`;
 const groupOf = code => Object.keys(GROUPS).find(k=>GROUPS[k].codes.includes(code));
 const $ = id => document.getElementById(id);
 
@@ -183,7 +184,7 @@ function renderList(){
     return `<div class="card" data-no="${m.no}">
       <div class="top"><div class="avatar" style="background:${gc}">${m.type}</div>
       <div><div class="name">${m.name}<span class="badge" style="background:${gc}">${m.code}</span></div>
-      <div class="meta">${m.no}｜${m.gender}｜${m.age}｜${m.pref}</div></div></div>
+      <div class="meta">${m.no}｜${genderHTML(m.gender)}｜${m.age}｜${m.pref}</div></div></div>
       <div class="intro">${m.intro}</div>
       <div class="tags">目的：${m.purpose}</div></div>`;
   }).join("");
@@ -198,7 +199,7 @@ function openDetail(no){
     : `<a class="contact insta" href="${m.curl}" target="_blank" rel="noopener">Instagramでつながる</a>`;
   $("modalSheet").innerHTML = `
     <h3>${m.name}<span class="badge" style="background:${gc}">${m.type}（${m.code}）</span></h3>
-    <div class="meta" style="color:var(--sub);font-size:13px">${m.no}｜${m.gender}｜${m.age}｜${m.pref}</div>
+    <div class="meta" style="color:var(--sub);font-size:13px">${m.no}｜${genderHTML(m.gender)}｜${m.age}｜${m.pref}</div>
     <div class="row"><b>自己紹介</b>${m.intro}</div>
     <div class="row"><b>目的</b>${m.purpose}</div>
     <div class="row"><b>繋がりたいタイプ</b>${m.want}</div>
@@ -214,7 +215,7 @@ function renderMy(){
   const gc = GROUPS[groupOf(me.code)].color;
   $("myProfile").innerHTML = `
     <h3 style="font-size:19px">${me.name} さん<span class="badge" style="background:${gc}">${me.type}（${me.code}）</span></h3>
-    <div style="color:var(--sub);font-size:13px;margin-bottom:8px">${me.no}｜${me.gender}｜${me.age}｜${me.pref}</div>
+    <div style="color:var(--sub);font-size:13px;margin-bottom:8px">${me.no}｜${genderHTML(me.gender)}｜${me.age}｜${me.pref}</div>
     <div class="row" style="margin:10px 0"><b style="display:block;font-size:12px;color:var(--sub)">自己紹介</b>${me.intro}</div>
     <div class="row" style="margin:10px 0"><b style="display:block;font-size:12px;color:var(--sub)">目的</b>${me.purpose}</div>
     <div class="row" style="margin:10px 0"><b style="display:block;font-size:12px;color:var(--sub)">連絡先</b>${me.ctype}：${me.curl}</div>
