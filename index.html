@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MBTIMATE｜MBTIタイプでつながる会員サイト</title>
+<meta name="description" content="MBTIタイプでつながる、会員制マッチングサイト。20〜39歳対象・永久無料。運営：アポイントメイト">
+<style>
+:root{
+  --analyst:#88619a; --diplomat:#33a474; --sentinel:#4298b4; --explorer:#e4ae3a;
+  --ink:#2b2b33; --sub:#6b6b76; --bg:#f7f5fb; --card:#ffffff; --line:#e7e3f0;
+  --male:#3b82c4; --female:#e5638c; --line-green:#06c755;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Hiragino Kaku Gothic ProN","Hiragino Sans","Noto Sans JP",sans-serif;background:var(--bg);color:var(--ink);line-height:1.6}
+header{position:sticky;top:0;z-index:50;background:#fff;border-bottom:1px solid var(--line);padding:10px 16px;display:flex;align-items:center;justify-content:space-between}
+.logo{font-weight:900;font-size:22px;letter-spacing:.04em}
+.logo span{color:var(--diplomat)}
+nav{display:flex;gap:8px}
+nav button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 14px;font-size:13px;cursor:pointer}
+nav button.primary{background:var(--ink);color:#fff;border-color:var(--ink)}
+main{max-width:960px;margin:0 auto;padding:20px 14px 60px}
+.hero{text-align:center;padding:28px 10px 8px}
+.hero h1{font-size:26px;font-weight:900;margin-bottom:8px}
+.hero p{color:var(--sub);font-size:14px}
+.stats{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;margin:18px 0}
+.stats h2{font-size:15px;margin-bottom:10px}
+.stats .total{font-size:15px;margin-bottom:6px}
+.stats .total b{font-size:26px}
+.ratiobar{display:flex;height:14px;border-radius:7px;overflow:hidden;margin:8px 0 4px}
+.ratiobar .m{background:var(--male)} .ratiobar .f{background:var(--female)}
+.ratio-labels{display:flex;justify-content:space-between;font-size:13px;color:var(--sub)}
+.typegrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:6px;margin-top:12px}
+.typegrid div{background:var(--bg);border-radius:8px;padding:6px 8px;font-size:12px;text-align:center}
+.typegrid b{display:block;font-size:16px}
+.loginbox{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;max-width:420px;margin:18px auto}
+.loginbox h2{font-size:16px;margin-bottom:12px;text-align:center}
+.loginbox label{display:block;font-size:13px;color:var(--sub);margin:10px 0 4px}
+.loginbox input{width:100%;padding:10px;border:1px solid var(--line);border-radius:8px;font-size:15px}
+.loginbox button{width:100%;margin-top:16px;padding:12px;border:none;border-radius:999px;background:var(--diplomat);color:#fff;font-size:15px;font-weight:700;cursor:pointer}
+.err{color:#d33;font-size:13px;margin-top:8px;min-height:1em;text-align:center}
+.note{font-size:12px;color:var(--sub);text-align:center;margin-top:10px}
+.filters{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0}
+.filters button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 12px;font-size:13px;cursor:pointer}
+.filters button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.filters select,.filters input[type=search]{padding:7px 10px;border:1px solid var(--line);border-radius:999px;font-size:13px;background:#fff}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;cursor:pointer}
+.card:hover{box-shadow:0 4px 16px rgba(0,0,0,.08)}
+.card .top{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.avatar{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:15px;flex:none}
+.card .name{font-weight:800;font-size:16px}
+.card .meta{font-size:12px;color:var(--sub)}
+.badge{display:inline-block;font-size:11px;color:#fff;border-radius:999px;padding:2px 8px;margin-left:6px;vertical-align:middle}
+.card .intro{font-size:13px;color:#444;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.card .tags{font-size:11px;color:var(--sub);margin-top:8px}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:flex-end;justify-content:center;z-index:100}
+.modal.open{display:flex}
+.modal .sheet{background:#fff;width:100%;max-width:560px;max-height:88vh;overflow:auto;border-radius:18px 18px 0 0;padding:20px}
+@media(min-width:640px){.modal{align-items:center}.modal .sheet{border-radius:18px}}
+.modal h3{font-size:19px;margin-bottom:4px}
+.modal .row{margin:10px 0;font-size:14px}
+.modal .row b{display:block;font-size:12px;color:var(--sub)}
+.contact{display:block;text-align:center;padding:13px;border-radius:999px;color:#fff;font-weight:800;text-decoration:none;margin-top:16px;font-size:15px}
+.contact.line{background:var(--line-green)} .contact.insta{background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888)}
+.closebtn{width:100%;margin-top:10px;padding:11px;border:1px solid var(--line);background:#fff;border-radius:999px;cursor:pointer}
+.hidden{display:none!important}
+footer{text-align:center;color:var(--sub);font-size:12px;padding:24px 0}
+.mypage{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">MBTI<span>MATE</span></div>
+  <nav id="nav" class="hidden">
+    <button id="navList">一覧</button>
+    <button id="navMy">マイページ</button>
+    <button id="navLogout">ログアウト</button>
+  </nav>
+</header>
+<main>
+  <!-- 未ログイン -->
+  <section id="viewGuest">
+    <div class="hero">
+      <h1>MBTIタイプでつながる、会員サイト</h1>
+      <p>MBTIMATEは、MBTIのタイプと相性で知り合える会員制マッチングサイトです。<br>20〜39歳対象・永久無料。運営：アポイントメイト</p>
+    </div>
+    <div class="stats" id="statsBox"></div>
+    <div class="loginbox">
+      <h2>会員ログイン</h2>
+      <label>ログインID</label>
+      <input id="loginId" type="text" autocomplete="username" placeholder="例：intj001">
+      <label>パスワード</label>
+      <input id="loginPw" type="password" autocomplete="current-password">
+      <div class="err" id="loginErr"></div>
+      <button id="loginBtn">ログイン</button>
+      <p class="note">会員一覧・プロフィール・連絡先は、ログインした会員だけがご覧いただけます。<br>新規登録は運営が行います。参加をご希望の方は運営までお問い合わせください。</p>
+    </div>
+  </section>
+
+  <!-- 一覧 -->
+  <section id="viewList" class="hidden">
+    <div class="stats" id="statsBox2"></div>
+    <div class="filters" id="groupFilters">
+      <button data-g="all" class="on">すべて</button>
+      <button data-g="analyst">分析家</button>
+      <button data-g="diplomat">外交官</button>
+      <button data-g="sentinel">番人</button>
+      <button data-g="explorer">探検家</button>
+      <select id="genderFilter">
+        <option value="all">性別：すべて</option>
+        <option value="男性">男性</option>
+        <option value="女性">女性</option>
+      </select>
+      <input type="search" id="searchBox" placeholder="名前で検索">
+    </div>
+    <div class="grid" id="memberGrid"></div>
+    <p class="note" id="listCount"></p>
+  </section>
+
+  <!-- マイページ -->
+  <section id="viewMy" class="hidden">
+    <div class="mypage" id="myProfile"></div>
+  </section>
+</main>
+<footer>MBTIMATE｜運営：アポイントメイト</footer>
+
+<div class="modal" id="modal"><div class="sheet" id="modalSheet"></div></div>
+
+<script>
+const MEMBERS = [{"no": "建築家001", "name": "しょう", "code": "INTJ", "type": "建築家", "gender": "男性", "age": "30〜34歳", "pref": "東京都", "intro": "よろしくお願いします", "purpose": "友活、飲み活、人脈", "want": "タイプは気にしない", "ng": "タイプは気にしない", "ctype": "LINE", "curl": "https://line.me/ti/p/5xeqsZZvSR", "login": "intj001", "password": "fqppr5dzfd"}, {"no": "建築家002", "name": "にしお", "code": "INTJ", "type": "建築家", "gender": "男性", "age": "30〜34歳", "pref": "埼玉県", "intro": "愛知出身のにしおです！仕事は、都内で営業職をしています！休日は、キャンプに行ったりアウトドアを楽しんだりするのが好きです！いろんな方と繋がれたらと思っています。よろしくお願いします！！", "purpose": "友活、恋活、人脈", "want": "タイプは気にしない", "ng": "タイプは気にしない", "ctype": "LINE", "curl": "https://line.me/ti/p/9RLAgXz6EP", "login": "intj002", "password": "g6tm35pfmw"}, {"no": "建築家003", "name": "サク", "code": "INTJ", "type": "建築家", "gender": "男性", "age": "35〜39歳", "pref": "東京都", "intro": "はじめまして！サクです！趣味は映画と旅行！性格は基本的に外交的です！休日は美味しいものを食べに出掛けたり、自然を感じに行くことが好きです！", "purpose": "友活、飲み活、人脈", "want": "タイプは気にしない", "ng": "タイプは気にしない", "ctype": "LINE", "curl": "https://line.me/ti/p/nPdp4yQDwb", "login": "intj003", "password": "3gdne7zwxh"}, {"no": "論理学者001", "name": "IKKO", "code": "INTP", "type": "論理学者", "gender": "男性", "age": "35〜39歳", "pref": "東京都", "intro": "初めまして！IKKOです！自分は元々北海道出身で、現在は東京に住んでいます！仕事は、美容師をしています！お客様と接する機会が多く、人と話すのが好きです！趣味は、スノボーやドライブです！ぜひ仲良くしてください！", "purpose": "友活、恋活、婚活、飲み活、人脈", "want": "タイプは気にしない", "ng": "タイプは気にしない", "ctype": "Instagram", "curl": "https://www.instagram.com/ikkoikkoai", "login": "intp001", "password": "jngqbrr3f2"}, {"no": "指揮官001", "name": "あいり", "code": "ENTJ", "type": "指揮官", "gender": "女性", "age": "20〜24歳", "pref": "東京都", "intro": "はじめまして！あいりです！東京都在住です！仕事は、歯科衛生士をしています！人と話すことが好きで、友達を増やしたいと思って参加しました！よろしくお願いします！", "purpose": "友活、恋活、婚活、飲み活、人脈", "want": "タイプは気にしない", "ng": "タイプは気にしない", "ctype": "LINE", "curl": "https://line.me/ti/p/8G_N3mTZW_", "login": "entj001", "password": "a8j8jscmwq"}, {"no": "指揮官002", "name": "ベーやん", "code": "ENTJ", "type": "指揮官", "gender": "男性", "age": "30〜34歳", "pref": "東京都", "intro": "友達の紹介でこのサークルを知りました！大阪で生まれ育ち、大学から関東で過ごしました！仕事は広告代理店で働いています！磯部凌馬です！よろしくお願いします！", "purpose": "友活、恋活、飲み活、人脈", "want": "タイプは気にしない", "ng": "タイプは気にしない", "ctype": "Instagram", "curl": "https://www.instagram.com/ryoma.isobe", "login": "entj002", "password": "4r2sczj9dw"}, {"no": "指揮官003", "name": "なっちゃん", "code": "ENTJ", "type": "指揮官", "gender": "女性", "age": "25〜29歳", "pref": "神奈川県", "intro": "神奈川在住、今年28歳になりました✨人とお話しすることが大好きです。仕事は病院で看護師をしてます！趣味は、カフェ巡り、お菓子作り、ショッピング、散歩など✨ぜひ仲良くしてください✨", "purpose": "友活、飲み活、人脈", "want": "タイプは気にしない", "ng": "タイプは気にしない", "ctype": "Instagram", "curl": "https://www.instagram.com/na._nack", "login": "entj003", "password": "ptk4vg92v2"}, {"no": "指揮官004", "name": "ゆき", "code": "ENTJ", "type": "指揮官", "gender": "女性", "age": "25〜29歳", "pref": "東京都", "intro": "宜しくお願いします！", "purpose": "友活、人脈", "want": "タイプは気にしない", "ng": "タイプは気にしない", "ctype": "LINE", "curl": "https://line.me/ti/p/9vxN-XAg8g", "login": "entj004", "password": "a3rsmt4kyc"}, {"no": "討論者001", "name": "ねおまる", "code": "ENTP", "type": "討論者", "gender": "男性", "age": "30〜34歳", "pref": "東京都", "intro": "初めまして！ねおまるです！東京都在住です！趣味は、ゲームとアニメ鑑賞です！よろしくお願いします！", "purpose": "飲み活、人脈", "want": "タイプは気にしない", "ng": "タイプは気にしない", "ctype": "LINE", "curl": "https://line.me/ti/p/tFrJqs-UhZ", "login": "entp001", "password": "x38mxwau4e"}, {"no": "討論者002", "name": "たなか", "code": "ENTP", "type": "討論者", "gender": "男性", "age": "20〜24歳", "pref": "東京都", "intro": "初めまして！たなかです！大学3年生です！趣味は、ギターと筋トレです！MBTIに興味があって参加しました！よろしくお願いします！", "purpose": "友活、恋活、飲み活、人脈", "want": "タイプは気にしない", "ng": "タイプは気にしない", "ctype": "LINE", "curl": "https://line.me/ti/p/SxvTKBWJol", "login": "entp002", "password": "ph2bngq32p"}, {"no": "討論者003", "name": "えい", "code": "ENTP", "type": "討論者", "gender": "男性", "age": "35〜39歳", "pref": "神奈川県", "intro": "初めまして！えいです！仕事は、銀行員をしています！趣味は、テニス、ランニングです！よろしくお願いします！", "purpose": "友活、恋活、婚活、飲み活、人脈", "want": "タイプは気にしない", "ng": "タイプは気にしない", "ctype": "LINE", "curl": "https://line.me/ti/p/hmPlSEk3wS", "login": "entp003", "password": "3aw4p426ha"}, {"no": "討論者004", "name": "くらら", "code": "ENTP", "type": "討論者", "gender": "女性", "age": "35〜39歳", "pref": "千葉県", "intro": "初めまして！くららです！千葉県在住です！趣味は、ライブやカフェ巡りです！ぜひ仲良くしてください！", "purpose": "友活、恋活、婚活、飲み活", "want": "タイプは気にしない", "ng": "タイプは気にしない", "ctype": "LINE", "curl": "https://line.me/ti/p/1I6MbmWUL0", "login": "entp004", "password": "hruxfe42dr"}, {"no": "討論者005", "name": "藤田亮", "code": "ENTP", "type": "討論者", "gender": "男性", "age": "25〜29歳", "pref": "東京都", "intro": "新卒で都市銀行に入行後、MVPを受賞した経験を活かし、現在は株式会社THEDOORのGMとして財務コンサルティング事業、マーケティング事業の展開をしています！また会計事務所の役員として、税務面でのサポートや士業の方との連携も深めております！", "purpose": "人脈", "want": "タイプは気にしない", "ng": "タイプは気にしない", "ctype": "LINE", "curl": "https://line.me/ti/p/eewHmHbUXV", "login": "entp005", "password": "3fqxwtwh5k"}, {"no": "提唱者001", "name": "れな", "code": "INFJ", "type": "提唱者", "gender": "女性", "age": "25〜29歳", "pref": "埼玉県", "intro": "普段はSNSやwebのコンサル（seo.meo.aio周り）を集客や目的にフォーカスをして行う事業やコーチング、バスケコーチとしてもスクールを協業で代表をやっております！また、副業で交流会やご紹介、20代を中心として夢や目標にチャレンジする環境を届けたいとコミュニティを作成し、その代表もやっております🔥", "purpose": "人脈", "want": "タイプは気にしない", "ng": "タイプは気にしない", "ctype": "Instagram", "curl": "https://www.instagram.com/rena.f__00", "login": "infj001", "password": "zfcpeusunt"}, {"no": "提唱者002", "name": "はやみ", "code": "INFJ", "type": "提唱者", "gender": "女性", "age": "20〜24歳", "pref": "東京都", "intro": "初めまして！はやみです！元々福岡県出身で東京にでてきてからは4年目です！趣味はカフェ巡りでたまにお菓子作りとかもしますよろしくお願いいたします！", "purpose": "友活", "want": "タイプは気にしない", "ng": "タイプは気にしない", "ctype": "Instagram", "curl": "https://www.instagram.com/haya__mi.in", "login": "infj002", "password": "az7kvmvewu"}, {"no": "仲介者001", "name": "イワブチメグミ", "code": "INFP", "type": "仲介者", "gender": "女性", "age": "35〜39歳", "pref": "神奈川県", "intro": "はじめまして！メグミです！神奈川県在住です！仕事は、看護師をしています！人と話すことが好きです！よろしくお願いします！", "purpose": "友活、恋活、婚活、人脈", "want": "タイプは気にしない", "ng": "タイプは気にしない", "ctype": "LINE", "curl": "https://line.me/ti/p/ZTHm4D_Vay", "login": "infp001", "password": "y4cexvu3y3"}, {"no": "仲介者002", "name": "さや", "code": "INFP", "type": "仲介者", "gender": "女性", "age": "25〜29歳", "pref": "東京都", "intro": "初めまして！さやです！元々岩手県出身で、東京に引っ越して4年目です！アニメや映画鑑賞が好きです。お話するのが好きなので色んな方と仲良くなれたらいいなと思ってます！よろしくお願いします！", "purpose": "飲み活、人脈", "want": "タイプは気にしない", "ng": "タイプは気にしない", "ctype": "Instagram", "curl": "https://www.instagram.com/sswsaya_38", "login": "infp002", "password": "p7m9y9xtny"}, {"no": "仲介者003", "name": "みずき", "code": "INFP", "type": "仲介者", "gender": "女性", "age": "25〜29歳", "pref": "東京都", "intro": "人生の転機により今年から都内勤務になりました！人見知りでインドア派ですが少しずつアクティブになりたいと思っています！お笑いとカラオケが好きです！", "purpose": "友活、恋活、婚活、飲み活", "want": "タイプは気にしない", "ng": "タイプは気にしない", "ctype": "Instagram", "curl": "https://www.instagram.com/knd_.6123", "login": "infp003", "password": "scmhf6gc4k"}, {"no": "仲介者004", "name": "しゅんぺい", "code": "INFP", "type": "仲介者", "gender": "男性", "age": "25〜29歳", "pref": "東京都", "intro": "新卒で銀行に入社し、現在は都内でコンサルとして働いています！運動が好きで、バスケやテニス、ゴルフ、スノーボードなどをやります！旅行や、美味しいご飯屋さんを探すのも好きです！最近は、筋トレにはまっています！よろしくお願いします！", "purpose": "友活、恋活、飲み活、人脈", "want": "タイプは気にしない", "ng": "タイプは気にしない", "ctype": "LINE", "curl": "https://line.me/ti/p/PJ96S_46Gm", "login": "infp004", "password": "u5ka9cz9gn"}, {"no": "主人公001", "name": "平井秀明", "code": "ENFJ", "type": "主人公", "gender": "男性", "age": "30〜34歳", "pref": "東京都", "intro": "初めまして！平井です！東京出身です！元々は福岡出身で、高校卒業後は東京に住んでいます！仕事は、サラリーマンをしています！休日は、体を動かすことが好きです！", "purpose": "恋活、飲み活", "want": "タイプは気にしない", "ng": "タイプは気にしない", "ctype": "LINE", "curl": "https://line.me/ti/p/95p-MzX362", "login": "hirai001", "password": "hbm6ethuz8"}, {"no": "主人公002", "name": "うみ", "code": "ENFJ", "type": "主人公", "gender": "女性", "age": "30〜34歳", "pref": "千葉県", "intro": "はじめまして！うみです！千葉県出身です！友達を増やしたいと思い参加しました！よろしくお願いします！", "purpose": "友活、飲み活、人脈", "want": "タイプは気にしない", "ng": "タイプは気にしない", "ctype": "Instagram", "curl": "https://www.instagram.com/koumi.t525", "login": "enfj002", "password": "47cw6feeqt"}, {"no": "主人公003", "name": "ほちこ", "code": "ENFJ", "type": "主人公", "gender": "女性", "age": "30〜34歳", "pref": "埼玉県", "intro": "埼玉県出身のほちこです！仕事は看護師をしています！人見知りでシャイなので、積極的に声をかけられると喜びます！友達をたくさん作りたいです！よろしくお願いします！", "purpose": "人脈", "want": "タイプは気にしない", "ng": "タイプは気にしない", "ctype": "Instagram", "curl": "https://www.instagram.com/maho6431", "login": "enfj003", "password": "4b9gshs7zc"}, {"no": "主人公004", "name": "ゆーや", "code": "ENFJ", "type": "主人公", "gender": "男性", "age": "35〜39歳", "pref": "東京都", "intro": "友達作りのきっかけになればと思います！元々は福岡出身で現在は東京で生活しています！趣味は、散歩、カフェ、映画です！", "purpose": "友活、恋活、飲み活、人脈", "want": "タイプは気にしない", "ng": "タイプは気にしない", "ctype": "LINE", "curl": "https://line.me/ti/p/8Jv_nCXb9R", "login": "enfj004", "password": "6xamemybfk"}, {"no": "主人公005", "name": "シュウ", "code": "ENFJ", "type": "主人公", "gender": "男性", "age": "35〜39歳", "pref": "埼玉県", "intro": "人と関わるのが好きです。仕事はリハビリテーション専門職です。お話し相手になってください！よろしくお願いします☺️", "purpose": "人脈", "want": "タイプは気にしない", "ng": "タイプは気にしない", "ctype": "LINE", "curl": "https://line.me/ti/p/83gwmLhMU_", "login": "enfj005", "password": "mbattk22n7"}, {"no": "運動家001", "name": "えみ", "code": "ENFP", "type": "運動家", "gender": "女性", "age": "35〜39歳", "pref": "東京都", "intro": "はじめまして！えみです！都内で歯科衛生士をしています！友達が少なく、こちらに参加しました！よろしくお願いします！", "purpose": "友活、人脈", "want": "タイプは気にしない", "ng": "タイプは気にしない", "ctype": "LINE", "curl": "https://line.me/ti/p/xfJedJIfZC", "login": "enfp001", "password": "hxrgwu8kvb"}, {"no": "運動家002", "name": "ken", "code": "ENFP", "type": "運動家", "gender": "男性", "age": "30〜34歳", "pref": "千葉県", "intro": "初めまして！32歳です！千葉県市原市で育ちました！仕事は、会社で働いています！趣味は、読書と旅行です！友達をたくさん作りたいです！よろしくお願いします！", "purpose": "友活、人脈", "want": "タイプは気にしない", "ng": "タイプは気にしない", "ctype": "LINE", "curl": "https://line.me/ti/p/9VXv423c_U", "login": "enfp002", "password": "sdjfk6ux2u"}, {"no": "運動家003", "name": "はるな", "code": "ENFP", "type": "運動家", "gender": "女性", "age": "30〜34歳", "pref": "埼玉県", "intro": "はじめまして！はるなです！埼玉県在住です！人と話すことが好きで、友達とカフェ巡りをするのが好きです！よろしくお願いします！", "purpose": "友活、人脈", "want": "タイプは気にしない", "ng": "タイプは気にしない", "ctype": "LINE", "curl": "https://line.me/ti/p/NV9gebA8iy", "login": "enfp003", "password": "htjf2q4dux"}, {"no": "運動家004", "name": "わかさま", "code": "ENFP", "type": "運動家", "gender": "女性", "age": "35〜39歳", "pref": "神奈川県", "intro": "初めまして！わかさまです！仕事は看護師をしています！最近出会いが少なくてこちらに登録しました！趣味は旅行に行ったり、写真を撮ったりすることが好きです！", "purpose": "婚活、人脈", "want": "タイプは気にしない", "ng": "タイプは気にしない", "ctype": "Instagram", "curl": "https://www.instagram.com/hr.waka", "login": "enfp004", "password": "hdf9uabmay"}, {"no": "運動家005", "name": "りよ", "code": "ENFP", "type": "運動家", "gender": "女性", "age": "35〜39歳", "pref": "東京都", "intro": "はじめまして！りよです！友達が少なくなってきたので、積極的に交流を増やしていきたいと思っています。飲み会やオフ会などを企画することもあります！", "purpose": "友活、人脈", "want": "タイプは気にしない", "ng": "タイプは気にしない", "ctype": "LINE", "curl": "https://line.me/ti/p/8li-C9D_Sr", "login": "enfp005", "password": "2zy8s34g89"}, {"no": "運動家006", "name": "マピト", "code": "ENFP", "type": "運動家", "gender": "男性", "age": "35〜39歳", "pref": "埼玉県", "intro": "こんにちは😀✨初めまして！埼玉県さいたま市出身です！現在は、フィットネスジムで勤務をしています！趣味は、体を動かすこと、サッカー観戦です！サッカー好きな方と友達になれたらうれしいです😃", "purpose": "人脈", "want": "タイプは気にしない", "ng": "タイプは気にしない", "ctype": "LINE", "curl": "https://line.me/ti/p/OpC-nCzwW7", "login": "enfp006", "password": "e6r98jn55j"}, {"no": "管理者001", "name": "カイル", "code": "ISTJ", "type": "管理者", "gender": "男性", "age": "25〜29歳", "pref": "東京都", "intro": "はじめまして、カイルです！仕事はシステムエンジニアをしています！趣味はゲーム、映画鑑賞、筋トレです！MBTIの事は全く知らないので是非教えてください！😆", "purpose": "友活", "want": "タイプは気にしない", "ng": "タイプは気にしない", "ctype": "Instagram", "curl": "https://www.instagram.com/kyles11111", "login": "istj001", "password": "dcyxgc7t53"}, {"no": "擁護者001", "name": "あやの", "code": "ISFJ", "type": "擁護者", "gender": "女性", "age": "25〜29歳", "pref": "東京都", "intro": "さとうあやのです！ ISFJの擁護者です！普段はキャリア支援とピアノ講師をしています！趣味はライブ観戦、ラケットスポーツ、カフェ巡りです☕️ いろんな方と繋がれたらと思ってます☺️ よろしくお願いします！", "purpose": "友活、人脈", "want": "タイプは気にしない", "ng": "タイプは気にしない", "ctype": "LINE", "curl": "https://line.me/ti/p/z16ZpQdj1B", "login": "isfj001", "password": "wa4duahxdr"}, {"no": "擁護者002", "name": "なりた", "code": "ISFJ", "type": "擁護者", "gender": "男性", "age": "30〜34歳", "pref": "千葉県", "intro": "愛知出身のにしおです！仕事は、都内で営業職をしています！休日は、キャンプに行ったりアウトドアを楽しんだりするのが好きです！いろんな方と繋がれたらと思っています。よろしくお願いします！！", "purpose": "友活、恋活、人脈", "want": "タイプは気にしない", "ng": "タイプは気にしない", "ctype": "LINE", "curl": "https://line.me/ti/p/9RLAgXz6EP", "login": "isfj002", "password": "c7up7dyw7u"}, {"no": "領事官001", "name": "ちか", "code": "ESFJ", "type": "領事官", "gender": "女性", "age": "35〜39歳", "pref": "千葉県", "intro": "人との繋がりを大切にするEFSJです。好きなことは、ピラティス、温泉、サウナなど、整えることが大好きです。安心感があり、お互いの自由な時間も尊重し合えるような男性、自然体でいられる仲間と繋がりたいです。冷たい人は苦手。", "purpose": "友活、飲み活、人脈", "want": "タイプは気にしない", "ng": "タイプは気にしない", "ctype": "LINE", "curl": "https://line.me/ti/p/a_IQSUpBQe", "login": "esfj001", "password": "7xkvq3p9uf"}, {"no": "領事官002", "name": "ゆう", "code": "ESFJ", "type": "領事官", "gender": "男性", "age": "25〜29歳", "pref": "東京都", "intro": "はじめまして！ゆうです！東京都出身です！仕事は、営業をしています！休日は、友達と遊ぶことが好きです！よろしくお願いします！", "purpose": "友活、恋活、飲み活、人脈", "want": "タイプは気にしない", "ng": "タイプは気にしない", "ctype": "LINE", "curl": "https://line.me/ti/p/pPkq00bB5O", "login": "esfj002", "password": "47jukng79m"}, {"no": "領事官003", "name": "はるか", "code": "ESFJ", "type": "領事官", "gender": "女性", "age": "30〜34歳", "pref": "東京都", "intro": "旅行が好きです！食べ歩きをするのが好きで、いろんな国のグルメを楽しむことが好きです！よろしくお願いします！", "purpose": "人脈", "want": "タイプは気にしない", "ng": "タイプは気にしない", "ctype": "LINE", "curl": "https://line.me/ti/p/WiJECpx4V5", "login": "esfj003", "password": "sgbvjypjzu"}, {"no": "領事官004", "name": "なつ", "code": "ESFJ", "type": "領事官", "gender": "女性", "age": "25〜29歳", "pref": "東京都", "intro": "はじめまして！なつです！元々は大阪出身で、仕事で上京してきました！仕事は看護師をしています！食べることが好きで、美味しいご飯と楽しいお酒が大好きです！ぜひ仲良くしてください！", "purpose": "人脈", "want": "タイプは気にしない", "ng": "タイプは気にしない", "ctype": "LINE", "curl": "https://line.me/ti/p/tCC1AAa6HN", "login": "esfj004", "password": "ksevcpkty2"}, {"no": "巨匠001", "name": "sho", "code": "ISTP", "type": "巨匠", "gender": "男性", "age": "25〜29歳", "pref": "東京都", "intro": "はじめまして！shoです！現在は新卒で通信業界で営業をしています！趣味は、バイク、キャンプ、温泉、旅行、グルメ巡りです！気軽に声をかけてください！✨", "purpose": "友活、人脈", "want": "タイプは気にしない", "ng": "タイプは気にしない", "ctype": "LINE", "curl": "https://line.me/ti/p/0_4GgUchnZ", "login": "istp001", "password": "bpq2yk9p68"}, {"no": "冒険家001", "name": "あさみ", "code": "ISFP", "type": "冒険家", "gender": "女性", "age": "35〜39歳", "pref": "神奈川県", "intro": "はじめまして！あさみです！神奈川県出身です！仕事は保育士をしています！趣味は旅行やアウトドアです！よろしくお願いします！", "purpose": "友活、人脈", "want": "タイプは気にしない", "ng": "タイプは気にしない", "ctype": "Instagram", "curl": "https://www.instagram.com/asami.umemoto", "login": "isfp001", "password": "y5veje4sx3"}, {"no": "冒険家002", "name": "りな", "code": "ISFP", "type": "冒険家", "gender": "女性", "age": "25〜29歳", "pref": "東京都", "intro": "はじめまして！りなです！東京都在住です！普段は、保育士をしています！趣味は、カフェ巡りや旅行です！仲良くしてください！", "purpose": "友活、人脈", "want": "タイプは気にしない", "ng": "タイプは気にしない", "ctype": "Instagram", "curl": "https://www.instagram.com/nari.21101_2", "login": "isfp002", "password": "u443ub7p57"}, {"no": "冒険家003", "name": "チャワ", "code": "ISFP", "type": "冒険家", "gender": "男性", "age": "35〜39歳", "pref": "千葉県", "intro": "はじめまして！チャワです！韓国語と日本語を話します。仕事は外国人のサポートなど、グローバルな仕事をしています！趣味は、旅行、グルメ巡り、ゴルフ、飲み会です！", "purpose": "友活、恋活、婚活、飲み活、人脈", "want": "タイプは気にしない", "ng": "タイプは気にしない", "ctype": "LINE", "curl": "https://line.me/ti/p/6ngpyFHsRX", "login": "isfp003", "password": "5xecynyeuw"}, {"no": "起業家001", "name": "るいよが", "code": "ESTP", "type": "起業家", "gender": "女性", "age": "35〜39歳", "pref": "神奈川県", "intro": "初めまして✨るいです☺️千葉県在住です！仕事は、営業をしています！休日は、ショッピングや旅行に行くのが好きです✈️食べることが好きです！友達が少なく趣味友や飲み友ができたら嬉しいです😊よろしくお願いします🙇🏻‍♀️", "purpose": "友活、恋活、婚活、飲み活、人脈", "want": "タイプは気にしない", "ng": "タイプは気にしない", "ctype": "LINE", "curl": "https://line.me/ti/p/Lb-hWXuVEa", "login": "estp001", "password": "cc4djcu8j7"}, {"no": "エンターテイナー001", "name": "しょうと", "code": "ESFP", "type": "エンターテイナー", "gender": "男性", "age": "20〜24歳", "pref": "神奈川県", "intro": "はじめまして！しょうとです！神奈川県出身です！仕事は、理学療法士をしています！趣味は、体を動かすことや、旅行が好きです！よろしくお願いします！", "purpose": "友活、恋活、婚活、飲み活、人脈", "want": "タイプは気にしない", "ng": "タイプは気にしない", "ctype": "Instagram", "curl": "https://www.instagram.com/shoto_aka_", "login": "esfp001", "password": "64j5nwubfw"}, {"no": "エンターテイナー002", "name": "すわっち", "code": "ESFP", "type": "エンターテイナー", "gender": "男性", "age": "25〜29歳", "pref": "東京都", "intro": "初めまして！すわっちです！東京都在住です！仕事は、エンジニアをしています！趣味は、筋トレとカラオケです！よろしくお願いします！", "purpose": "友活、飲み活、人脈", "want": "タイプは気にしない", "ng": "タイプは気にしない", "ctype": "LINE", "curl": "https://line.me/ti/p/TT0TeRjfG0", "login": "esfp002", "password": "hzvxch2r34"}, {"no": "エンターテイナー003", "name": "もも", "code": "ESFP", "type": "エンターテイナー", "gender": "女性", "age": "25〜29歳", "pref": "神奈川県", "intro": "はじめまして！ももです！神奈川出身です！趣味はライブに行くことと、温泉に行くことです！ぜひ仲良くしてください！", "purpose": "友活、飲み活、人脈", "want": "タイプは気にしない", "ng": "タイプは気にしない", "ctype": "LINE", "curl": "https://line.me/ti/p/EWNQ4Ab4Th", "login": "esfp003", "password": "yhvpau4wxp"}, {"no": "エンターテイナー004", "name": "まさや", "code": "ESFP", "type": "エンターテイナー", "gender": "男性", "age": "30〜34歳", "pref": "東京都", "intro": "初めまして！まさやです！現在は、IT企業で営業をしています！趣味は、体を動かすことやグルメ巡りです！いろんな方と繋がって仲良くなれたらと思っています！よろしくお願いします！", "purpose": "友活、恋活、婚活、飲み活、人脈", "want": "タイプは気にしない", "ng": "タイプは気にしない", "ctype": "Instagram", "curl": "https://www.instagram.com/k.masaya1189", "login": "esfp004", "password": "mvpgezfam7"}];
+const GROUPS = {
+  analyst:{name:"分析家",color:"#88619a",codes:["INTJ","INTP","ENTJ","ENTP"]},
+  diplomat:{name:"外交官",color:"#33a474",codes:["INFJ","INFP","ENFJ","ENFP"]},
+  sentinel:{name:"番人",color:"#4298b4",codes:["ISTJ","ISFJ","ESTJ","ESFJ"]},
+  explorer:{name:"探検家",color:"#e4ae3a",codes:["ISTP","ISFP","ESTP","ESFP"]}
+};
+const groupOf = code => Object.keys(GROUPS).find(k=>GROUPS[k].codes.includes(code));
+const $ = id => document.getElementById(id);
+
+function statsHTML(){
+  const total = MEMBERS.length;
+  const male = MEMBERS.filter(m=>m.gender==="男性").length;
+  const female = total - male;
+  const mp = Math.round(male/total*100), fp = 100-mp;
+  const types = {};
+  MEMBERS.forEach(m=>{types[m.type]=(types[m.type]||0)+1});
+  const order = ["建築家","論理学者","指揮官","討論者","提唱者","仲介者","主人公","運動家","管理者","擁護者","幹部","領事官","巨匠","冒険家","起業家","エンターテイナー"];
+  const tg = order.map(t=>`<div>${t}<b>${types[t]||0}名</b></div>`).join("");
+  return `<h2>現在の掲載会員（自動集計）</h2>
+    <div class="total">掲載会員数 <b>${total}名</b>　男性：女性 ＝ ${male}：${female}</div>
+    <div class="ratiobar"><div class="m" style="width:${mp}%"></div><div class="f" style="width:${fp}%"></div></div>
+    <div class="ratio-labels"><span>男性 ${male}名（${mp}%）</span><span>女性 ${female}名（${fp}%）</span></div>
+    <div class="typegrid">${tg}</div>`;
+}
+$("statsBox").innerHTML = statsHTML();
+$("statsBox2").innerHTML = statsHTML();
+
+let me = null;
+try{ const saved = localStorage.getItem("mbtimate_login"); if(saved){ me = MEMBERS.find(m=>m.login===saved) || null; } }catch(e){}
+
+function show(view){
+  ["viewGuest","viewList","viewMy"].forEach(v=>$(v).classList.add("hidden"));
+  $(view).classList.remove("hidden");
+  $("nav").classList.toggle("hidden", !me);
+  window.scrollTo(0,0);
+}
+function renderList(){
+  const g = document.querySelector("#groupFilters button.on").dataset.g;
+  const gender = $("genderFilter").value;
+  const q = $("searchBox").value.trim();
+  let list = MEMBERS.filter(m =>
+    (g==="all" || groupOf(m.code)===g) &&
+    (gender==="all" || m.gender===gender) &&
+    (!q || m.name.includes(q))
+  );
+  list = list.slice().sort((a,b)=>{
+    const na = parseInt(a.no.replace(/\D/g,"")), nb = parseInt(b.no.replace(/\D/g,""));
+    return nb-na;
+  });
+  $("memberGrid").innerHTML = list.map(m=>{
+    const gc = GROUPS[groupOf(m.code)].color;
+    return `<div class="card" data-no="${m.no}">
+      <div class="top"><div class="avatar" style="background:${gc}">${m.type}</div>
+      <div><div class="name">${m.name}<span class="badge" style="background:${gc}">${m.code}</span></div>
+      <div class="meta">${m.no}｜${m.gender}｜${m.age}｜${m.pref}</div></div></div>
+      <div class="intro">${m.intro}</div>
+      <div class="tags">目的：${m.purpose}</div></div>`;
+  }).join("");
+  $("listCount").textContent = `${list.length}名を表示中`;
+  document.querySelectorAll(".card").forEach(c=>c.addEventListener("click",()=>openDetail(c.dataset.no)));
+}
+function openDetail(no){
+  const m = MEMBERS.find(x=>x.no===no); if(!m) return;
+  const gc = GROUPS[groupOf(m.code)].color;
+  const btn = m.ctype==="LINE"
+    ? `<a class="contact line" href="${m.curl}" target="_blank" rel="noopener">LINEでつながる</a>`
+    : `<a class="contact insta" href="${m.curl}" target="_blank" rel="noopener">Instagramでつながる</a>`;
+  $("modalSheet").innerHTML = `
+    <h3>${m.name}<span class="badge" style="background:${gc}">${m.type}（${m.code}）</span></h3>
+    <div class="meta" style="color:var(--sub);font-size:13px">${m.no}｜${m.gender}｜${m.age}｜${m.pref}</div>
+    <div class="row"><b>自己紹介</b>${m.intro}</div>
+    <div class="row"><b>目的</b>${m.purpose}</div>
+    <div class="row"><b>繋がりたいタイプ</b>${m.want}</div>
+    <div class="row"><b>繋がりたくないタイプ</b>${m.ng}</div>
+    ${btn}
+    <button class="closebtn" onclick="document.getElementById('modal').classList.remove('open')">閉じる</button>`;
+  $("modal").classList.add("open");
+}
+$("modal").addEventListener("click",e=>{ if(e.target.id==="modal") $("modal").classList.remove("open"); });
+
+function renderMy(){
+  if(!me) return;
+  const gc = GROUPS[groupOf(me.code)].color;
+  $("myProfile").innerHTML = `
+    <h3 style="font-size:19px">${me.name} さん<span class="badge" style="background:${gc}">${me.type}（${me.code}）</span></h3>
+    <div style="color:var(--sub);font-size:13px;margin-bottom:8px">${me.no}｜${me.gender}｜${me.age}｜${me.pref}</div>
+    <div class="row" style="margin:10px 0"><b style="display:block;font-size:12px;color:var(--sub)">自己紹介</b>${me.intro}</div>
+    <div class="row" style="margin:10px 0"><b style="display:block;font-size:12px;color:var(--sub)">目的</b>${me.purpose}</div>
+    <div class="row" style="margin:10px 0"><b style="display:block;font-size:12px;color:var(--sub)">連絡先</b>${me.ctype}：${me.curl}</div>
+    <p class="note" style="text-align:left;margin-top:16px">プロフィールの変更・掲載の停止をご希望の方は、運営までご連絡ください。</p>`;
+}
+function doLogin(){
+  const id = $("loginId").value.trim(), pw = $("loginPw").value;
+  const found = MEMBERS.find(m=>m.login===id && m.password===pw);
+  if(!found){ $("loginErr").textContent = "ログインIDまたはパスワードが違います。"; return; }
+  me = found;
+  try{ localStorage.setItem("mbtimate_login", me.login); }catch(e){}
+  $("loginErr").textContent = "";
+  renderList(); show("viewList");
+}
+$("loginBtn").addEventListener("click", doLogin);
+$("loginPw").addEventListener("keydown",e=>{ if(e.key==="Enter") doLogin(); });
+$("navList").addEventListener("click",()=>{ renderList(); show("viewList"); });
+$("navMy").addEventListener("click",()=>{ renderMy(); show("viewMy"); });
+$("navLogout").addEventListener("click",()=>{ me=null; try{localStorage.removeItem("mbtimate_login");}catch(e){} show("viewGuest"); });
+document.querySelectorAll("#groupFilters button").forEach(b=>b.addEventListener("click",()=>{
+  document.querySelectorAll("#groupFilters button").forEach(x=>x.classList.remove("on"));
+  b.classList.add("on"); renderList();
+}));
+$("genderFilter").addEventListener("change",renderList);
+$("searchBox").addEventListener("input",renderList);
+
+if(me){ renderList(); show("viewList"); } else { show("viewGuest"); }
+</script>
+</body>
+</html>
