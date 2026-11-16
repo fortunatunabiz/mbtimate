@@ -24,6 +24,7 @@ main{max-width:960px;margin:0 auto;padding:20px 14px 60px}
 .hero h1{font-size:26px;font-weight:900;margin-bottom:8px}
 .hero p{color:var(--sub);font-size:14px}
 .stats{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;margin:18px 0}
+.stats::before{content:"";display:block;height:6px;border-radius:3px;background:linear-gradient(90deg,var(--analyst) 0 25%,var(--diplomat) 25% 50%,var(--sentinel) 50% 75%,var(--explorer) 75% 100%);margin-bottom:12px}
 .stats h2{font-size:15px;margin-bottom:10px}
 .stats .total{font-size:15px;margin-bottom:6px}
 .stats .total b{font-size:26px}
@@ -71,7 +72,7 @@ footer{text-align:center;color:var(--sub);font-size:12px;padding:24px 0}
 </head>
 <body>
 <header>
-  <div class="logo">MBTI<span>MATE</span></div>
+  <div class="logo"><span style="color:#88619a">M</span><span style="color:#33a474">B</span><span style="color:#4298b4">T</span><span style="color:#e4ae3a">I</span> <span style="color:#e5638c">M</span><span style="color:#33a474">A</span><span style="color:#4298b4">T</span><span style="color:#f08a24">E</span></div>
   <nav id="nav" class="hidden">
     <button id="navList">一覧</button>
     <button id="navMy">マイページ</button>
@@ -81,9 +82,16 @@ footer{text-align:center;color:var(--sub);font-size:12px;padding:24px 0}
   <!-- 未ログイン -->
   <section id="viewGuest">
     <div class="hero">
+      <div style="font-size:42px;font-weight:900;letter-spacing:.03em;line-height:1.15"><span style="color:#88619a">M</span><span style="color:#33a474">B</span><span style="color:#4298b4">T</span><span style="color:#e4ae3a">I</span> <span style="color:#e5638c">M</span><span style="color:#33a474">A</span><span style="color:#4298b4">T</span><span style="color:#f08a24">E</span></div>
+      <div style="margin:14px 0 6px">
+        <span style="display:inline-block;padding:4px 12px;border-radius:999px;font-size:12px;font-weight:800;background:#dff5e6;color:#1e8a5a;margin:2px">永久無料</span>
+        <span style="display:inline-block;padding:4px 12px;border-radius:999px;font-size:12px;font-weight:800;background:#e3f0fb;color:#2f7fd0;margin:2px">20〜39歳限定</span>
+        <span style="display:inline-block;padding:4px 12px;border-radius:999px;font-size:12px;font-weight:800;background:#fdf3d0;color:#a67c00;margin:2px">男女比 5：5</span>
+      </div>
       <h1>MBTIタイプでつながる、会員サイト</h1>
-      <p>MBTIMATEは、MBTIのタイプと相性で知り合える会員制マッチングサイトです。<br>20〜39歳対象・永久無料。運営：アポイントメイト</p>
-      <p style="margin-top:16px"><a href="https://forms.gle/vy4eBBa4FZfPRTgj8" target="_blank" rel="noopener" style="display:inline-block;background:var(--diplomat);color:#fff;font-weight:800;font-size:16px;padding:13px 34px;border-radius:999px;text-decoration:none">新規登録はこちら</a></p>
+      <p>MBTIMATEは、MBTIの<span style="background:linear-gradient(transparent 55%,#ffef8a 55%);font-weight:700">タイプと相性で知り合える</span>会員制マッチングサイトです。<br>20〜39歳対象・永久無料。運営：アポイントメイト</p>
+      <p style="margin-top:16px"><a href="https://forms.gle/vy4eBBa4FZfPRTgj8" target="_blank" rel="noopener" style="display:inline-block;background:var(--line-green);color:#fff;font-weight:800;font-size:16px;padding:13px 34px;border-radius:999px;text-decoration:none;box-shadow:0 4px 14px rgba(6,199,85,.35)">新規登録はこちら</a></p>
+      <div style="margin-top:14px"><span style="display:inline-block;padding:4px 12px;border-radius:999px;font-size:12px;font-weight:800;background:#fff;border:1px solid var(--line);color:#8e44ad;margin:2px">友活</span><span style="display:inline-block;padding:4px 12px;border-radius:999px;font-size:12px;font-weight:800;background:#fff;border:1px solid var(--line);color:#1e8a5a;margin:2px">飲み活</span><span style="display:inline-block;padding:4px 12px;border-radius:999px;font-size:12px;font-weight:800;background:#fff;border:1px solid var(--line);color:#2f7fd0;margin:2px">恋活</span><span style="display:inline-block;padding:4px 12px;border-radius:999px;font-size:12px;font-weight:800;background:#fff;border:1px solid var(--line);color:#c77400;margin:2px">婚活</span><span style="display:inline-block;padding:4px 12px;border-radius:999px;font-size:12px;font-weight:800;background:#fff;border:1px solid var(--line);color:#d6336c;margin:2px">人脈</span></div>
     </div>
     <div class="loginbox">
       <h2>会員ログイン</h2>
@@ -136,7 +144,7 @@ const GROUPS = {
   explorer:{name:"探検家",color:"#e4ae3a",codes:["ISTP","ISFP","ESTP","ESFP"]}
 };
 const genderHTML = g => `<span style="color:${g==="男性"?"var(--male)":"var(--female)"};font-weight:700">${g}</span>`;
-const PURPOSE_STYLE = {"友活":{c:"#2f7fd0",bg:"#e3f0fb"},"恋活":{c:"#d6336c",bg:"#fde7ef"},"婚活":{c:"#8e44ad",bg:"#f3e8fa"},"飲み活":{c:"#d97a06",bg:"#fdf0dc"},"人脈":{c:"#1e8a5a",bg:"#e2f4ec"}};
+const PURPOSE_STYLE = {"友活":{c:"#8e44ad",bg:"#f3e8fa"},"恋活":{c:"#2f7fd0",bg:"#e3f0fb"},"婚活":{c:"#c77400",bg:"#fdf0dc"},"飲み活":{c:"#1e8a5a",bg:"#e2f4ec"},"人脈":{c:"#d6336c",bg:"#fde7ef"}};
 const purposeChips = p => (p||"").split("、").map(t=>t.trim()).filter(Boolean).map(t=>{ const st = PURPOSE_STYLE[t] || {c:"#666",bg:"#f0f0f0"}; return `<span style="display:inline-block;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:700;margin:2px 4px 2px 0;color:${st.c};background:${st.bg};border:1.5px solid ${st.c}">${t}</span>`; }).join("");
 const groupOf = code => Object.keys(GROUPS).find(k=>GROUPS[k].codes.includes(code));
 const $ = id => document.getElementById(id);
@@ -149,7 +157,8 @@ function statsHTML(){
   const types = {};
   MEMBERS.forEach(m=>{types[m.type]=(types[m.type]||0)+1});
   const order = ["建築家","論理学者","指揮官","討論者","提唱者","仲介者","主人公","運動家","管理者","擁護者","幹部","領事官","巨匠","冒険家","起業家","エンターテイナー"];
-  const tg = order.map(t=>`<div>${t}<b>${types[t]||0}名</b></div>`).join("");
+  const TCOL = {"建築家":"#88619a","論理学者":"#88619a","指揮官":"#88619a","討論者":"#88619a","提唱者":"#33a474","仲介者":"#33a474","主人公":"#33a474","運動家":"#33a474","管理者":"#4298b4","擁護者":"#4298b4","幹部":"#4298b4","領事官":"#4298b4","巨匠":"#e4ae3a","冒険家":"#e4ae3a","起業家":"#e4ae3a","エンターテイナー":"#e4ae3a"};
+  const tg = order.map(t=>`<div style="border-top:4px solid ${TCOL[t]}">${t}<b>${types[t]||0}名</b></div>`).join("");
   return `<h2>現在の掲載会員（自動集計）</h2>
     <div class="total">掲載会員数 <b>${total}名</b>　男性：女性 ＝ ${male}：${female}</div>
     <div class="ratiobar"><div class="m" style="width:${mp}%"></div><div class="f" style="width:${fp}%"></div></div>
